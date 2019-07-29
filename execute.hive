@@ -1,0 +1,48 @@
+set hive.cli.print.header =True;
+
+create external table london_streets(Crime_ID string, Month string, Reported_by string, Falls_within string, Longitude string, Latitude string, Location string, LSOA_code string, LSOA_name string, Crime_type string, Investigation_status string) row format delimited fields terminated by ',' location 's3://londoncrime/london-street/';
+
+create external table london_streets_orc(Crime_ID string, Month string, Reported_by string, Falls_within string, Longitude string, Latitude string, Location string, LSOA_code string, LSOA_name string, Crime_type string, Investigation_status string) stored as orc;
+
+insert into table london_streets_orc select * from london_streets;
+
+
+create external table london_outcomes(Crime_ID string, Month string, Reported_by string, Falls_within string, Longitude string, Latitude string, Location string, LSOA_code string, LSOA_name string, Outcome_type string) row format delimited fields terminated by ',' location 's3a://londoncrime/london-outcomes/';
+
+create external table london_outcomes_orc(Crime_ID string, Month string, Reported_by string, Falls_within string, Longitude string, Latitude string, Location string, LSOA_code string, LSOA_name string, Outcome_type string) stored as orc;
+
+insert into table london_outcomes_orc select * from london_outcomes;
+
+create external table london_crime_by_lsoa(LSOA_code string, District string, Major_category string, Minor_category string, Value string, Year string, Month string) row format delimited fields terminated by ',' location 's3a://londoncrime/london-crime-by-lsoa/';
+
+create external table london_crime_by_lsoa_orc(LSOA_code string, District string, Major_category string, Minor_category string, Value string, Year string, Month string) stored as orc;
+
+insert into london_crime_by_lsoa_orc select * from london_crime_by_lsoa;
+
+create external table london_stop_and_search(Type string, Date_of_crime string, Part_of_policing_operation string, latitude string, Longitude string, Gender string, Age string, Self_ethinicity string, Officer_ethinicity string, Legislation string, Object_of_search string, Outcomes string, Outcome_linked_to_object_of_search string, Removal_of_more_than_just_outer_clothing string) row format delimited fields terminated by ',' location 's3a://londoncrime/london-stop-and-search/';
+
+create external table london_stop_and_search_orc(Type string, Date_of_crime string, Part_of_policing_operation string, latitude string, Longitude string, Gender string, Age string, Self_ethinicity string, Officer_ethinicity string, Legislation string, Object_of_search string, Outcomes string, Outcome_linked_to_object_of_search string, Removal_of_more_than_just_outer_clothing string) stored as orc;
+
+insert into london_stop_and_search_orc select * from london_stop_and_search;
+
+create external table london_unemployement(Year string, Unemployement_rate string) row format delimited fields terminated by ',' location 's3a://londoncrime/london-unemployement/';
+
+create external table london_unemployement_orc(Year string, Unemployement_rate string) stored as orc;
+
+insert into london_unemployement_orc select * from london_unemployement;
+
+create external table london_crime_fact(crime_id string, lsoa_code string, lsoa_name string, location string, crime_type string, major_category string, minor_category string, legislation string, object_of_search string, gender string, age string, self_ethinicity string, year string, month string) row format delimited fields terminated by ',' location 's3a://londoncrime/london-crime-fact/';
+
+create external table london_crime_fact_orc(crime_id string, lsoa_code string, lsoa_name string, location string, crime_type string, major_category string, minor_category string, legislation string, object_of_search string, gender string, age string, self_ethinicity string, year string, month string) stored as orc;
+
+insert into london_crime_fact_orc select * from london_crime_fact where gender != 'Oct-17' and gender != '';
+
+
+
+
+
+
+
+
+
+
